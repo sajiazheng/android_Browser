@@ -114,6 +114,7 @@ public class BookmarksProviderWrapper {
 	}
 	
 	/**
+	 * 获取访问的书签 在限制数目大小的列表
 	 * Get a list of most visited bookmarks items, limited in size.
 	 * @param contentResolver The content resolver.
 	 * @param limit The size limit.
@@ -156,6 +157,7 @@ public class BookmarksProviderWrapper {
 	}
 	
 	/**
+	 * 访问最近访问的历史记录 限制大小的列表
 	 * Get a list of most recent history items, limited in size.
 	 * @param contentResolver The content resolver.
 	 * @param limit The size limit.
@@ -200,7 +202,12 @@ public class BookmarksProviderWrapper {
 		
 		return result;
 	}
-	
+	/**
+	 * 通过ID获取某一个具体的书签信息
+	 * @param contentResolver
+	 * @param id
+	 * @return
+	 */
 	public static BookmarkItem getStockBookmarkById(ContentResolver contentResolver, long id) {
 		BookmarkItem result = null;
 		String whereClause = Browser.BookmarkColumns._ID + " = " + id;
@@ -218,7 +225,11 @@ public class BookmarksProviderWrapper {
 		
 		return result;
 	}
-	
+	/**
+	 * 通过ID删除具体的某一个书签
+	 * @param contentResolver
+	 * @param id
+	 */
 	public static void deleteStockBookmark(ContentResolver contentResolver, long id) {
 		String whereClause = Browser.BookmarkColumns._ID + " = " + id;
         
@@ -328,6 +339,7 @@ public class BookmarksProviderWrapper {
 	}
 	
 	/**
+	 * 删除一个历史记录
 	 * Delete an history record, e.g. reset the visited count and visited date if its a bookmark, or delete it if not.
 	 * @param contentResolver The content resolver.
 	 * @param id The history id.

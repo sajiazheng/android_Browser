@@ -53,7 +53,7 @@ public class CustomWebView extends WebView {
 	
 	private static Method mOnPauseMethod = null;
 	private static Method mOnResumeMethod = null;
-	private static Method mSetFindIsUp = null;
+	private static Method mSetFindIsUp = null;//在页面上高亮显示搜索内容
 	private static Method mNotifyFindDialogDismissed = null;
 	
 	/**
@@ -245,6 +245,7 @@ public class CustomWebView extends WebView {
 	}
 	
 	/**
+	 * 通过反射 在WebView上表现出暂停onPause
 	 * Perform an 'onPause' on this WebView through reflexion.
 	 */
 	public void doOnPause() {
@@ -264,6 +265,7 @@ public class CustomWebView extends WebView {
 	}
 	
 	/**
+	 * 通过反射 在WebView上表现出 恢复onResume
 	 * Perform an 'onResume' on this WebView through reflexion.
 	 */
 	public void doOnResume() {
@@ -282,6 +284,10 @@ public class CustomWebView extends WebView {
 		}
 	}
 	
+	/**
+	 * 在页面上搜索 通过反射 调用系统的函数
+	 * @param value
+	 */
 	public void doSetFindIsUp(boolean value) {
 		if (mSetFindIsUp != null) {
 			try {

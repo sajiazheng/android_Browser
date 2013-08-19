@@ -135,34 +135,34 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
 	protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS =
 	        new FrameLayout.LayoutParams(
 	        ViewGroup.LayoutParams.MATCH_PARENT,
-	        ViewGroup.LayoutParams.MATCH_PARENT);
+	        ViewGroup.LayoutParams.MATCH_PARENT);//全屏显示 用来播放html5自定义视图
 	
 	protected LayoutInflater mInflater = null;
 	
 	private LinearLayout mTopBar;//顶部的bar
 	private LinearLayout mBottomBar;//底部的bar吟唱起来的
 	
-	private LinearLayout mFindBar;
+	private LinearLayout mFindBar;//搜索查找关键之的 搜索栏
 	
-	private ImageButton mFindPreviousButton;
-	private ImageButton mFindNextButton;
-	private ImageButton mFindCloseButton;
+	private ImageButton mFindPreviousButton;//先前搜索查找
+	private ImageButton mFindNextButton;//向下搜索查找
+	private ImageButton mFindCloseButton;//关闭搜素框
 	
-	private EditText mFindText;
+	private EditText mFindText;//寻找关键之的 EditText
 	
-	private ImageView mPreviousTabView;
-	private ImageView mNextTabView;
+	private ImageView mPreviousTabView;//多个Tab页面的时候  比如你add一个Tab之后 就出现了  访问前一个tab
+	private ImageView mNextTabView;//访问下一个Tag
 	
 	private ImageButton mToolsButton;
-	private AutoCompleteTextView mUrlEditText;
-	private ImageButton mGoButton;	
-	private ProgressBar mProgressBar;	
+	private AutoCompleteTextView mUrlEditText;//Url输入框
+	private ImageButton mGoButton;//前进访问
+	private ProgressBar mProgressBar;	//页面访问进度条
 	
 	private ImageView mBubbleRightView;
 	private ImageView mBubbleLeftView;
 	
-	private CustomWebView mCurrentWebView;
-	private List<CustomWebView> mWebViews;
+	private CustomWebView mCurrentWebView;//自定义的WebView 现在正在访问的WebView
+	private List<CustomWebView> mWebViews;//针对不同的Tab页面中WebView 放在这里集合中 而这里的WebView 集合 是显示在 mViewFlipper
 	
 	private ImageButton mPreviousButton;//前一个页面
 	private ImageButton mNextButton;//后一一个页面
@@ -190,7 +190,7 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
 	
 	private QuickActionGrid mToolsActionGrid;//其实就是popuwindow
 	
-	private ValueCallback<Uri> mUploadMessage;//路径有效性
+	private ValueCallback<Uri> mUploadMessage;//路径有效性  特别是上传文件的时候
 
 	
 	private OnSharedPreferenceChangeListener mPreferenceChangeListener;//sharePreference变化的时候 监听器
@@ -255,7 +255,7 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
         	addTab(false);
         	navigateToUrl(i.getDataString());
         } else {
-        	// Normal start.
+        	// 正常的开始
         	int currentVersionCode = ApplicationUtils.getApplicationVersionCode(this);
         	int savedVersionCode = PreferenceManager.getDefaultSharedPreferences(this).getInt(Constants.PREFERENCES_LAST_VERSION_CODE, -1);
         	
@@ -842,8 +842,12 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
 				
 		        return mVideoProgressView;
 			}
-			
+			@Override
 			public void onShowCustomView(View view, WebChromeClient.CustomViewCallback callback) {
+				//showCustomView 是用来播放html5 全屏视频的 函数 返回来的view 应该是 VideoView  下面的这个网址仅供学习参考
+				//http://blog.csdn.net/zrzlj/article/details/8050633
+				// 他与onHideCustomView相对应的
+				//This is used for Fullscreen video playback; see "HTML5 Video support" documentation on WebView.
 				showCustomView(view, callback);
 		    }
 			
@@ -1082,6 +1086,8 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
     	}
     	
     	RelativeLayout view = (RelativeLayout) mInflater.inflate(R.layout.webview, mViewFlipper, false);
+    	//第三个参数表示 不添加到这个里面 我后续手动添加 如果为true 那就直接添加上
+    	// 参考网址 http://www.189works.com/article-43331-1.html
     	
     	mCurrentWebView = (CustomWebView) view.findViewById(R.id.webview);
     	
@@ -1140,9 +1146,9 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
 		if (find.length() == 0) {
 			mFindPreviousButton.setEnabled(false);
 			mFindNextButton.setEnabled(false);
-			mCurrentWebView.clearMatches();
+			mCurrentWebView.clearMatches();//清除高亮显示
 		} else {
-			int found = mCurrentWebView.findAll(find.toString());
+			int found = mCurrentWebView.findAll(find.toString());//准找 关键字
 			if (found < 2) {
 				mFindPreviousButton.setEnabled(false);
 				mFindNextButton.setEnabled(false);
@@ -1152,7 +1158,9 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
 			}
 		}
 	}
-	
+	/**
+	 * 把隐藏的 页面寻找 的 组件框显示出来
+	 */
 	private void showFindDialog() {
 		setFindBarVisibility(true);
 		mCurrentWebView.doSetFindIsUp(true);
@@ -1283,12 +1291,16 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
 			mUrlBarVisible = false;
     	}
     }
-    
+    /**
+     * 显示输入对话框
+     */
     private void showKeyboardForFindDialog() {
     	InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     	imm.showSoftInput(mFindText, InputMethodManager.SHOW_IMPLICIT);
     }
-    
+    /**
+     * 隐藏输入对话框
+     */
     private void hideKeyboardFromFindDialog() {
     	InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     	imm.hideSoftInputFromWindow(mFindText.getWindowToken(), 0);
@@ -1401,11 +1413,10 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
     		
     		hideKeyboard(true);
     		
-    		if (url.equals(Constants.URL_ABOUT_START)) {
+    		if (url.equals(Constants.URL_ABOUT_START)) {//如果访问的关于其实页面
     			
     			mCurrentWebView.loadDataWithBaseURL("file:///android_asset/startpage/",
     					ApplicationUtils.getStartPage(this), "text/html", "UTF-8", Constants.URL_ABOUT_START);
-    			
     		} else {
     			
     			// If the url is not from GWT mobile view, and is in the mobile view url list, then load it with GWT.
@@ -1421,6 +1432,7 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
     }        
     
     /**
+     * 访问指定url的网站loadUrl
      * Navigate to the url given in the url edit text.
      */
     private void navigateToUrl() {
@@ -1428,6 +1440,7 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
     }
     
     /**
+     * 访问用户的首页
      * Navigate to the user home page.
      */
     private void navigateToHome() {
@@ -1436,6 +1449,7 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
     }
     
     /**
+     * 访问上一次
      * Navigate to the previous page in history.
      */
     private void navigatePrevious() {
@@ -1447,6 +1461,7 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
     }
     
     /**
+     * 向前访问
      * Navigate to the next page in history. 
      */
     private void navigateNext() {
@@ -1462,7 +1477,7 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
 		
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
-			this.moveTaskToBack(true);
+			this.moveTaskToBack(true);//该Activity所在的task将会被整体搬迁到stack的最底端
 			return true;
 		default: return super.onKeyLongPress(keyCode, event);
 		}
@@ -1821,6 +1836,7 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
     }
 	
 	/**
+	 * 如果存在的话 那就显示前一个tab的WebView
 	 * Show the previous tab, if any.
 	 */
 	private void showPreviousTab(boolean resetToolbarsRunnable) {
@@ -1853,14 +1869,17 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
 			updateUI();
 		}
 	}
-	
+	/**
+	 * 显示起HTML5的自定义View 隐藏WebView
+	 * @param view
+	 * @param callback
+	 */
 	private void showCustomView(View view, WebChromeClient.CustomViewCallback callback) {
         // if a view already exists then immediately terminate the new one
         if (mCustomView != null) {
             callback.onCustomViewHidden();
             return;
         }
-
         MainActivity.this.getWindow().getDecorView();
         
         FrameLayout decor = (FrameLayout) getWindow().getDecorView();
@@ -1871,7 +1890,9 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
         setStatusBarVisibility(false);
         mCustomViewCallback = callback;
     }
-	
+	/**
+	 * 隐藏起HTML5的自定义View 显示WebView
+	 */
 	private void hideCustomView() {
 		if (mCustomView == null)
             return;
@@ -1885,7 +1906,9 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
 	}
 	
 	/**
-	 * Show the next tab, if any.
+	 *如果有的话 就显示下一个tab的webView
+	 *Show the next tab, if any.
+	 * @param resetToolbarsRunnable 是否需要重置倒计时隐藏栏
 	 */
 	private void showNextTab(boolean resetToolbarsRunnable) {
 		
@@ -2089,14 +2112,12 @@ public class MainActivity extends Activity implements IToolbarsContainer, OnTouc
 			if (isSwitchTabsByFlingEnabled()) {
 				if (e2.getEventTime() - e1.getEventTime() <= FLIP_TIME_THRESHOLD) {
 					if (e2.getX() > (e1.getX() + FLIP_PIXEL_THRESHOLD)) {						
-
 						showPreviousTab(false);
 						return false;
 					}
 
 					// going forwards: pushing stuff to the left
 					if (e2.getX() < (e1.getX() - FLIP_PIXEL_THRESHOLD)) {					
-
 						showNextTab(false);
 						return false;
 					}

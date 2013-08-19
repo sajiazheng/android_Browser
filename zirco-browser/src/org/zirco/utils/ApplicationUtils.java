@@ -312,6 +312,7 @@ public class ApplicationUtils {
 	}
 	
 	/**
+	 * 从raw中加载读取成为string资源
 	 * Load a raw string resource.
 	 * @param context The current context.
 	 * @param resourceId The resource id.
@@ -394,6 +395,7 @@ public class ApplicationUtils {
 	}
 	
 	/**
+	 * 构建最近阅读的书签成为html格式
 	 * Build the html result of the most recent bookmarks.
 	 * @param context The current context.
 	 * @return The html result of the most recent bookmarks.
@@ -428,6 +430,7 @@ public class ApplicationUtils {
 	}
 	
 	/**
+	 * 构建最近阅读的历史成为html格式
 	 * Build the html result of the most recent history.
 	 * @param context The current context.
 	 * @return The html result of the most recent history.
